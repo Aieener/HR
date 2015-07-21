@@ -540,7 +540,7 @@ int main()
 
 	// ======================= Plotting the final config ========================
 	deque<HR> R;
-	MC m(1E11L,8,32,32,5);
+	MC m(1E11L,8,32,32,1);
 	m.MCRUN();
 	R= m.getRodlist();
 	m.plot(R);
