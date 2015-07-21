@@ -19,7 +19,8 @@ class MC
 {
     private:
     	//data members;
-    	std::deque<HR> Rodlist; // the list storage the Rods;
+        std::deque<HR> VRodlist; // the list storage the Vertical Rods;
+        std::deque<HR> HRodlist; // the list storage the Horizantal Rods;
     	int r,c;
     	int length;
     	long int step;
@@ -31,7 +32,8 @@ class MC
     	MC(long int ST, int LEN,int C, int R, double Z);
 
     	// ********* Getters********//
-    	deque<HR> getRodlist();
+        deque<HR> getVRodlist();
+        deque<HR> getHRodlist();
     	double getTho() const;
     	double getQ() const;
     	double getAaccp() const;
@@ -39,9 +41,7 @@ class MC
         double getNh() const;
         double getNv() const;
         // ******** Setters ******//
-        void setRodlist(std::deque<HR> RodL);
-
-
+        // void setRodlist(std::deque<HR> RodL);
 
     	// ******** Other Functianality *******//
         void Add(Cells &s,double &prob,double &probav, double &probah);
@@ -49,7 +49,7 @@ class MC
     	void MCRUN(); 
         void Zvs_();
 
-    	void plot(const deque<HR>& Rodlist);
+    	void plot(const deque<HR>& VRodlist, const deque<HR>& HRodlist);
 
 };
 

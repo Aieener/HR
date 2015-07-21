@@ -45,6 +45,8 @@ using namespace std;
 
 MC::MC(long int ST, int LEN,int C, int R, double Z)
 {
+	VRodlist.clear(); // the list storage the Vertical Rods;
+    HRodlist.clear(); // the list storage the Horizantal Rods;
 	r = R;
 	c = C;
 	length = LEN;
@@ -53,9 +55,14 @@ MC::MC(long int ST, int LEN,int C, int R, double Z)
 	nh=nv=dh=dv=ah=av=0;
 }
 
-deque<HR> MC::getRodlist() 
+deque<HR> MC::getVRodlist() 
 {
-	return Rodlist;
+	return VRodlist;
+}
+
+deque<HR> MC::getHRodlist() 
+{
+	return HRodlist;
 }
 
 double MC::getTho() const
@@ -95,10 +102,10 @@ double MC::getNv() const
 	return nv;
 }
 
-void MC::setRodlist(std::deque<HR> RodL)
-{
-	Rodlist = RodL;
-}
+// void MC::setRodlist(std::deque<HR> RodL)
+// {
+// 	Rodlist = RodL;
+// }
 
 void MC::Add(Cells &s,double &prob,double &probav, double &probah)
 {
@@ -137,7 +144,7 @@ void MC::Add(Cells &s,double &prob,double &probav, double &probah)
 					{
 						// Do addition;
 						// push the new rod into the Rodlist;
-						Rodlist.push_front(rod);
+						VRodlist.push_back(rod);
 						av++;
 						nv++;// accumulate the # of ver rod;
 						// update new N, E and new config;
@@ -178,7 +185,7 @@ void MC::Add(Cells &s,double &prob,double &probav, double &probah)
 					{
 						// Do addition;
 						// push the new rod into the Rodlist;
-						Rodlist.push_front(rod);	
+						VRodlist.push_back(rod);	
 						av++;
 						nv++;// accumulate the # of ver rod;
 						
@@ -215,7 +222,7 @@ void MC::Add(Cells &s,double &prob,double &probav, double &probah)
 					{
 						//Do addition;
 						//push the new rod into the Rodlist;
-						Rodlist.push_back(rod);
+						HRodlist.push_back(rod);
 						ah++;
 						nh++;// accumulate the # of hor rod;
 
@@ -257,7 +264,7 @@ void MC::Add(Cells &s,double &prob,double &probav, double &probah)
 					{
 						// Do addition;
 						// push the new rod into the Rodlist;
-						Rodlist.push_back(rod);	
+						HRodlist.push_back(rod);	
 						ah++;
 						nh++;// accumulate the # of hor rod;
 						
@@ -284,15 +291,15 @@ void MC::Del(Cells &s,double &prob,double &probdv, double &probdh,double &size)
 
 	if(DE == 0) // delete Vertical rod; which means delete indx from Rodlist[0,nv-1]
 	{
-		if(Rodlist[0].getOrientation()==0)// make sure there are Vertical rod;
+		if(VRodlist.size()!=0)// make sure there are Vertical rod;
 		{
 			int indx; // pick a random index from the Rodlist;
 			indx = rand()%int(nv);
 
 			//remove Rodlist[indx];
 			int x,y;// the position of the target on the cells;
-			x = Rodlist[indx].getX();
-			y = Rodlist[indx].getY();
+			x = VRodlist[indx].getX();
+			y = VRodlist[indx].getY();
 
 			if(prob <= probdv)
 			{
@@ -300,13 +307,13 @@ void MC::Del(Cells &s,double &prob,double &probdv, double &probdh,double &size)
 			// ============== the case rod is inside the Boundary ==============
 				if(y + length <= r)
 				{					
-					for(int i = 0; i<Rodlist[indx].getLength(); i++)
+					for(int i = 0; i<VRodlist[indx].getLength(); i++)
 					{
 						// update the new config of cells
 						s.getSquare(x,y + i).setStatus(0);
 					}
 					// remove the target rod from the deque Rodlist;
-					Rodlist.erase(Rodlist.begin() + indx);
+					VRodlist.erase(VRodlist.begin() + indx);
 					nv--;// substract the # of ver rod;
 					dv++;
 				}
@@ -322,7 +329,7 @@ void MC::Del(Cells &s,double &prob,double &probdv, double &probdh,double &size)
 					{
 						s.getSquare(x,i).setStatus(0);
 					}
-					Rodlist.erase(Rodlist.begin() + indx);
+					VRodlist.erase(VRodlist.begin() + indx);
 					nv--;// substract the # of ver rod;
 					dv++;
 				}
@@ -332,28 +339,28 @@ void MC::Del(Cells &s,double &prob,double &probdv, double &probdh,double &size)
 
 	else
 	{
-		if(Rodlist[size-1].getOrientation()==1)// make sure there are Hor rod;
+		if(HRodlist.size()!=0)// make sure there are Hor rod;
 		{
 			int indx;
-			indx = rand()%int(nh) + int(nv); // redefine indx from Rodlist[nv,nv+nh-1] 
+			indx = rand()%int(nh); // redefine indx from Rodlist[nv,nv+nh-1] 
 
 			//remove Rodlist[indx];
 			int x,y;// the position of the target on the cells;
-			x = Rodlist[indx].getX();
-			y = Rodlist[indx].getY();
+			x = HRodlist[indx].getX();
+			y = HRodlist[indx].getY();
 			// --------------------- it's a Horizontal rod -----------------------
 			if(prob <= probdh)
 			{
                 // ==============the case rod is inside the Boundary============
 				if(x + length <= c)
 				{					
-					for(int i = 0; i<Rodlist[indx].getLength(); i++)
+					for(int i = 0; i<HRodlist[indx].getLength(); i++)
 					{
 						// update the new config of cells
 						s.getSquare(x+i,y).setStatus(0);
 					}
 					// remove the target rod from the deque Rodlist;
-					Rodlist.erase(Rodlist.begin() + indx);
+					HRodlist.erase(HRodlist.begin() + indx);
 					nh--;// substract the # of hor rod;
 					dh++;
 				}
@@ -371,7 +378,7 @@ void MC::Del(Cells &s,double &prob,double &probdv, double &probdh,double &size)
 						s.getSquare(i,y).setStatus(0);
 					}
 
-					Rodlist.erase(Rodlist.begin() + indx);
+					HRodlist.erase(HRodlist.begin() + indx);
 					nh--;// substract the # of hor rod;
 					dh++;
 				}
@@ -481,32 +488,54 @@ void MC::MCRUN()
 }
 
 
-void MC::plot(const deque<HR>& Rodlist)
+void MC::plot(const deque<HR>& VRodlist, const deque<HR>& HRodlist)
 {
+	stringstream stv,sth;
 
-	FILE* gnuplot = popen("gnuplot -persistent","w");
-	// fprintf(gnuplot, "set terminal png \n  set output 'RvsNi.png'\n");
-	fprintf(gnuplot, "set grid\n f(x)=0\n set xrange [0:%d]\nset yrange [0:%d]\n",r,c);
-	fprintf(gnuplot, "set xtics 0,1,%d\n set ytics 0,1,%d\n set format x\"\"\n set format y\"\"\n", r-1,c-1);
-	for(int i = 0; i< (nh+nv); i++)
+	for (int i = 0; i < VRodlist.size(); i++)
 	{
-		double x = Rodlist[i].getX();
-		double y = Rodlist[i].getY();
-		double ori = Rodlist[i].getOrientation();
-
-		if(ori ==1)
-		{
-			fprintf(gnuplot, "set object %d rect from %lf,%lf to %lf,%lf front fc rgb \"blue\" fillstyle solid 1.0\n", i + 1, x, y, x + Rodlist[i].getLength(), y + 1);
-		}
-		else
-		{
-			fprintf(gnuplot, "set object %d rect from %lf,%lf to %lf,%lf front fc rgb \"red\" fillstyle solid 1.0\n", i + 1, x, y, x + 1, y + Rodlist[i].getLength());
-		}
-
+		stv<< VRodlist[i].getX() << "   "<< VRodlist[i].getY()<<endl;
 	}
-	fprintf(gnuplot, "plot f(x) ls 0 notitle\n");
-	fflush(gnuplot);
-	pclose(gnuplot);
+
+	ofstream myfilev ("2dplotv.txt");
+	string datav = stv.str();
+	myfilev << datav;
+	myfilev.close();
+
+	for (int j = 0; j < HRodlist.size(); j++)
+	{
+		sth<< HRodlist[j].getX() << "   "<< HRodlist[j].getY() <<endl;
+	}
+
+	ofstream myfileh ("2dploth.txt");
+	string datah = sth.str();
+	myfileh << datah;
+	myfileh.close();
+
+
+	// FILE* gnuplot = popen("gnuplot -persistent","w");
+	// // fprintf(gnuplot, "set terminal png \n  set output 'RvsNi.png'\n");
+	// fprintf(gnuplot, "set grid\n f(x)=0\n set xrange [0:%d]\nset yrange [0:%d]\n",r,c);
+	// fprintf(gnuplot, "set xtics 0,1,%d\n set ytics 0,1,%d\n set format x\"\"\n set format y\"\"\n", r-1,c-1);
+	// for(int i = 0; i< (nh+nv); i++)
+	// {
+	// 	double x = Rodlist[i].getX();
+	// 	double y = Rodlist[i].getY();
+	// 	double ori = Rodlist[i].getOrientation();
+
+	// 	if(ori ==1)
+	// 	{
+	// 		fprintf(gnuplot, "set object %d rect from %lf,%lf to %lf,%lf front fc rgb \"blue\" fillstyle solid 1.0\n", i + 1, x, y, x + Rodlist[i].getLength(), y + 1);
+	// 	}
+	// 	else
+	// 	{
+	// 		fprintf(gnuplot, "set object %d rect from %lf,%lf to %lf,%lf front fc rgb \"red\" fillstyle solid 1.0\n", i + 1, x, y, x + 1, y + Rodlist[i].getLength());
+	// 	}
+
+	// }
+	// fprintf(gnuplot, "plot f(x) ls 0 notitle\n");
+	// fflush(gnuplot);
+	// pclose(gnuplot);
 }
 
 void Zvs_()
@@ -539,11 +568,12 @@ int main()
 	double start = clock();
 
 	// ======================= Plotting the final config ========================
-	deque<HR> R;
-	MC m(1E11L,8,32,32,1);
+	deque<HR> VR,HR;
+	MC m(1E7L,8,32,32,1);
 	m.MCRUN();
-	R= m.getRodlist();
-	m.plot(R);
+	VR = m.getVRodlist();
+	HR = m.getHRodlist();
+	m.plot(VR,HR);
 	// ======================= get data for N vs z ========================
 	// Zvs_();
 	// ======================= end of simulation, print out the time =======
