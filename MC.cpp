@@ -513,29 +513,35 @@ void MC::plot(const deque<HR>& VRodlist, const deque<HR>& HRodlist)
 	myfileh.close();
 
 
-	// FILE* gnuplot = popen("gnuplot -persistent","w");
-	// // fprintf(gnuplot, "set terminal png \n  set output 'RvsNi.png'\n");
-	// fprintf(gnuplot, "set grid\n f(x)=0\n set xrange [0:%d]\nset yrange [0:%d]\n",r,c);
-	// fprintf(gnuplot, "set xtics 0,1,%d\n set ytics 0,1,%d\n set format x\"\"\n set format y\"\"\n", r-1,c-1);
-	// for(int i = 0; i< (nh+nv); i++)
-	// {
-	// 	double x = Rodlist[i].getX();
-	// 	double y = Rodlist[i].getY();
-	// 	double ori = Rodlist[i].getOrientation();
+	FILE* gnuplot = popen("gnuplot -persistent","w");
+	// fprintf(gnuplot, "set terminal png \n  set output 'RvsNi.png'\n");
+	fprintf(gnuplot, "set grid\n f(x)=0\n set xrange [0:%d]\nset yrange [0:%d]\n",r,c);
+	fprintf(gnuplot, "set xtics 0,1,%d\n set ytics 0,1,%d\n set format x\"\"\n set format y\"\"\n", r-1,c-1);
+	for(int i = 0; i< nv; i++)
+	{
+		double x = VRodlist[i].getX();
+		double y = VRodlist[i].getY();
+		double ori = VRodlist[i].getOrientation();
 
-	// 	if(ori ==1)
-	// 	{
-	// 		fprintf(gnuplot, "set object %d rect from %lf,%lf to %lf,%lf front fc rgb \"blue\" fillstyle solid 1.0\n", i + 1, x, y, x + Rodlist[i].getLength(), y + 1);
-	// 	}
-	// 	else
-	// 	{
-	// 		fprintf(gnuplot, "set object %d rect from %lf,%lf to %lf,%lf front fc rgb \"red\" fillstyle solid 1.0\n", i + 1, x, y, x + 1, y + Rodlist[i].getLength());
-	// 	}
 
-	// }
-	// fprintf(gnuplot, "plot f(x) ls 0 notitle\n");
-	// fflush(gnuplot);
-	// pclose(gnuplot);
+		fprintf(gnuplot, "set object %d rect from %lf,%lf to %lf,%lf front fc rgb \"red\" fillstyle solid 1.0\n", i + 1, x, y, x + 1, y + VRodlist[i].getLength());
+
+
+	}
+
+	for(int i = 0; i< nh; i++)
+	{
+		double x = HRodlist[i].getX();
+		double y = HRodlist[i].getY();
+		double ori = HRodlist[i].getOrientation();
+
+
+		fprintf(gnuplot, "set object %d rect from %lf,%lf to %lf,%lf front fc rgb \"blue\" fillstyle solid 1.0\n", i + 1, x, y, x + HRodlist[i].getLength(), y + 1);	
+
+	}
+	fprintf(gnuplot, "plot f(x) ls 0 notitle\n");
+	fflush(gnuplot);
+	pclose(gnuplot);
 }
 
 void Zvs_()
@@ -569,7 +575,7 @@ int main()
 
 	// ======================= Plotting the final config ========================
 	deque<HR> VR,HR;
-	MC m(1E7L,8,32,32,1);
+	MC m(1E8L,8,32,32,60);
 	m.MCRUN();
 	VR = m.getVRodlist();
 	HR = m.getHRodlist();

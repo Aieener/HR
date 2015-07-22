@@ -9,9 +9,9 @@ import numpy as np
 
 fig = plt.figure()
 ax = fig.add_subplot(111,aspect='equal')
-a=0
 
 # ================================ Draw Ver Rods ===========================
+a = 0
 with open("2dplotv.txt", "r") as file:
     for line in file:
         a= a+1
@@ -39,11 +39,13 @@ for y in range(0,a):
                 (xpos[y], ypos[y]),
                 dx[y],
                 dy[y],
+                facecolor="red"
             )
         )
 
 
-# # ================================ Draw Hor Rods ===========================
+# ================================ Draw Hor Rods ===========================
+a = 0
 with open("2dploth.txt", "r") as file:
     for line in file:
         a= a+1
@@ -71,7 +73,6 @@ for y in range(0,a):
                 (xpos[y], ypos[y]),
                 dx[y],
                 dy[y],
-                facecolor="red"
             )
 
         )
@@ -106,7 +107,6 @@ for y in range(0,a):
 #     dz3[z] = 8
 # if a3 != 0:
 #     ax.bar3d(xpos3, ypos3, zpos3, dx3, dy3, dz3, color='g',alpha=0.2)
-
-fig.savefig('2dplot.png', dpi=90, bbox_inches='tight')
 plt.axis('equal')
+fig.savefig('2dplot.png', dpi=90, bbox_inches='tight')
 plt.show()
