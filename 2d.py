@@ -76,37 +76,7 @@ for y in range(0,a):
             )
 
         )
-
-# # ================================ Draw Up Rods ===========================
-# a3=0
-# with open("3dplotu.txt", "r") as file:
-#     for line in file:
-#         a3= a3+1
-
-# xpos3 = np.zeros(a3)
-# ypos3 = np.zeros(a3)
-# zpos3 = np.zeros(a3)
-
-# i = 0
-# with open("3dplotu.txt", "r") as file:
-#     for line in file:
-#         words = line.split()
-#         wx = words[0]
-#         wy = words[1]
-#         wz = words[2]
-#         xpos3[i] = wx
-#         ypos3[i] = wy
-#         zpos3[i] = wz
-#         i = i+1
-
-# dx3 = np.ones(a3)
-# dy3 = np.ones(a3)
-# dz3 = np.ones(a3)
-
-# for z in range(0,a3):
-#     dz3[z] = 8
-# if a3 != 0:
-#     ax.bar3d(xpos3, ypos3, zpos3, dx3, dy3, dz3, color='g',alpha=0.2)
+        
 plt.axis('equal')
 fig.savefig('2dplot.png', dpi=90, bbox_inches='tight')
 plt.show()
