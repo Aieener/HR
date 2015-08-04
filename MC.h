@@ -5,6 +5,7 @@
 #include "square.h"
 #include "cells.h"
 #include "hardrods.h"
+#include "histogram.h"
 #include <cstdlib>
 #include <cmath>
 #include <time.h>

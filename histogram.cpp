@@ -1,19 +1,7 @@
 //histogram.cpp
-#include <iostream>
-#include <fstream>
-#include <sstream>
-#include <string>
-#include "square.h"
-#include "cells.h"
-// #include "MC.h"
-#include "hardrods.h"
-#include <cstdlib>
-#include <cmath>
-#include <time.h>
-#include <deque>
-#include <utility> 
+
 #include "histogram.h"
-using namespace std;
+
 
 Histogram::Histogram(double Min, double Max, double bW)
 {

@@ -6,9 +6,6 @@
 */
 
 #include "hardrods.h"
-#include <iostream>
-#include <vector>
-#include <string>
 
 HR::HR()
 {

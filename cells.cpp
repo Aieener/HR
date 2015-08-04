@@ -3,18 +3,8 @@
 // Author: Yuding Ai
 // Date: 2015.06.05
 
-#include <iostream>
-#include <fstream>
-#include <sstream>
-#include <string>
+
 #include "cells.h"
-#include "hardrods.h"
-#include "MC.h"
-#include <cstdlib>
-#include <cmath>
-#include <array>
-#include <cassert>
-using namespace std;
 extern const string EXC_INVALID_DESC = "Not a valid description of cells!";
 
 Cells::Cells()

@@ -26,22 +26,7 @@
 */
 
 
-#include <iostream>
-#include <fstream>
-#include <sstream>
-#include <string>
-#include "square.h"
-#include "cells.h"
 #include "MC.h"
-#include "hardrods.h"
-#include <cstdlib>
-#include <cmath>
-#include <time.h>
-#include <deque>
-#include "histogram.h"
-#include <array>
-using namespace std;
-
 
 MC::MC(long int ST, int LEN,int C, int R, double Z)
 {
@@ -102,17 +87,13 @@ double MC::getNv() const
 	return nv;
 }
 
-// void MC::setRodlist(std::deque<HR> RodL)
-// {
-// 	Rodlist = RodL;
-// }
 
 void MC::Add(Cells &s,double &prob,double &probav, double &probah)
 {
 	int x,y,o; // pick a random position and orientation for the HR to be added;
 	x = rand()%c;
 	y = rand()%r;
-	o = rand()%2;// lattice gas case
+	o = rand()%2;// change it to 1 for  lattice gas case
 
 	if(s.getSquare(x,y).isEmpty()) // if it's open, try to do Addition;
 	{
@@ -287,7 +268,7 @@ void MC::Del(Cells &s,double &prob,double &probdv, double &probdh,double &size)
 {
 	//Do Del;
 	int DE; //pick a random config of rod to delete with 50% 50% chance for eachl;
-	DE = rand()%2; // lattice gas case
+	DE = rand()%2; // change it to 1 for  lattice gas case
 
 	if(DE == 0) // delete Vertical rod; which means delete indx from Rodlist[0,nv-1]
 	{
@@ -421,7 +402,7 @@ void MC::MCRUN()
 		
 	srand(time(NULL));
 	long int i = 0;
-	Histogram his(0, r*c/length, 1); // the histogram of nv
+	// Histogram his(0, r*c/length, 1); // the histogram of nv
 
 	//================================Start my MC simulation=================================
 	while (i<step)
@@ -474,7 +455,7 @@ void MC::MCRUN()
 
 		if (i%(step/10000) == 0)
 		{
-			his.record(nv);
+			// his.record(nv);
 			st << i << "         " << Q <<"        "<< nv << "          "<< nh << "         "<< tho << "         "<< AD<< "         "<< endl;
 			cout <<"Process: "<< ((10000*i)/step)/100.00 <<"%"<<"    "<<"SIZE: "<<av+ah-dv-dh<<"    "<<"# of Ver Rod: "<<nv<<"    "<<"# of Hor Rod: "<< nh <<"   "<<"Qis "<<Q <<"   "<<"tho is: "<<tho << endl;
 		}
@@ -484,37 +465,13 @@ void MC::MCRUN()
 	string data = st.str();
 	myfile3 << data;
 	myfile3.close();
-	his.plot(0);
+	// his.plot(0);
 }
 
 
 void MC::plot(const deque<HR>& VRodlist, const deque<HR>& HRodlist)
 {
 	stringstream stv,sth;
-
-	// FILE* gnuplot = popen("gnuplot -persistent","w");
-	// // fprintf(gnuplot, "set terminal png \n  set output 'RvsNi.png'\n");
-	// fprintf(gnuplot, "set grid\n f(x)=0\n set xrange [0:%d]\nset yrange [0:%d]\n",r,c);
-	// fprintf(gnuplot, "set xtics 0,1,%d\n set ytics 0,1,%d\n set format x\"\"\n set format y\"\"\n", r-1,c-1);
-	// for(int i = 0; i<  VRodlist.size(); i++)
-	// {
-	// 	double x = VRodlist[i].getX();
-	// 	double y = VRodlist[i].getY();
-	// 	fprintf(gnuplot, "set object %d rect from %lf,%lf to %lf,%lf front fc rgb \"red\" fillstyle solid 1.0\n", i + 1, x, y, x + 1, y + VRodlist[i].getLength());
-
-
-	// }
-
-	// for (int j = 0; j < HRodlist.size(); j++)
-	// {
-	// 	double x = HRodlist[j].getX();
-	// 	double y = HRodlist[j].getY();
-	// 	fprintf(gnuplot, "set object %d rect from %lf,%lf to %lf,%lf front fc rgb \"blue\" fillstyle solid 1.0\n", j + 1 + VRodlist.size(), x, y, x + HRodlist[j].getLength(), y + 1);	
-	// }
-
-	// fprintf(gnuplot, "plot f(x) ls 0 notitle\n");
-	// fflush(gnuplot);
-	// pclose(gnuplot);
 
 	for (int i = 0; i < VRodlist.size(); i++)
 	{
@@ -535,12 +492,9 @@ void MC::plot(const deque<HR>& VRodlist, const deque<HR>& HRodlist)
 	string datah = sth.str();
 	myfileh << datah;
 	myfileh.close();
-
-
-
 }
 
-void Zvs_()
+void MC::Zvs_()
 {
 	double z = 0;
 	double H,V,tho,Q,miubeta,cmiubeta;	
@@ -548,7 +502,7 @@ void Zvs_()
 	ofstream myfile("dataNvsZ.dat");
 	for (int i =0; i < 500; i++)
 	{
-		MC m(1E6,1,10,10,z);
+		MC m(1E9,1,100,100,z);
 		z = double (double(10*i)/500.0);
 		m.MCRUN();
 		H =  m.getNh();
@@ -557,6 +511,7 @@ void Zvs_()
 		Q = (H - V)/(H + V);
 		miubeta = log(z); // vink, lecture 7,8: page2
 		cmiubeta = (log(tho) - log(1-tho));
+		cout << i << endl;
 		st << z <<"         " << H << "             "<< V<< "             "<<tho<< "             "<<Q<< "             "<< miubeta<< "             "<< cmiubeta << endl;
 	}
 	string data = st.str();
@@ -565,22 +520,5 @@ void Zvs_()
 }
 
 
-int main()
-{
-	double start = clock();
 
-	// ======================= Plotting the final config ========================
-	deque<HR> VR,HR;
-	MC m(1E8L,8,32,32,5);
-	m.MCRUN();
-	VR = m.getVRodlist();
-	HR = m.getHRodlist();
-	m.plot(VR,HR);
-	// ======================= get data for N vs z ========================
-	// Zvs_();
-	// ======================= end of simulation, print out the time =======
-	double end = clock();
-	cout <<"This simulation takes "<< (double(end-start)/CLOCKS_PER_SEC)<<endl;
-	return 0;
-}
 
