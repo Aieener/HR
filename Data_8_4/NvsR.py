@@ -33,6 +33,7 @@ ax1.set_ylabel('Numbers of Vertical Rods')
 ax1.plot(Run,N1, c='b', label='Vertical Rods')
 title = 'Runs_VS_N1.png'
 leg = ax1.legend()
+leg.get_frame().set_alpha(0.5)
 fig1.savefig(title, dpi=180, bbox_inches='tight')
 
 fig2 = plt.figure()
@@ -43,6 +44,7 @@ ax2.set_ylabel('Numbers of Horizontal Rods')
 ax2.plot(Run,N2, c='r', label='Horizontal Rods')
 title = 'Runs_VS_N2.png'
 leg = ax2.legend()
+leg.get_frame().set_alpha(0.5)
 fig2.savefig(title, dpi=180, bbox_inches='tight')
 
 
@@ -55,6 +57,7 @@ ax3.set_ylabel('The Order parameter Q')
 ax3.plot(Run,Q, c='g', label='Q')
 title = 'Runs_VS_Q.png'
 leg = ax3.legend()
+leg.get_frame().set_alpha(0.5)
 fig3.savefig(title, dpi=180, bbox_inches='tight')
 
 
