@@ -232,20 +232,6 @@ void MC::MCRUN()
 {
 	Cells s(c,r);
 
-	// ******************  if there is an initial state:************************** //
-	// Rodlist = s.Initial(length,753,1);
-	// int k = 0;
-	// for(int i = 0; i < Rodlist.size();i++)
-	// {
-	// 	if (Rodlist[i].getOrientation() == 0)
-	// 	{
-	// 		k++;
-	// 	}
-	// }
-	// nv = av = k;
-	// nh = ah = Rodlist.size() - k;
-	// ******************  finish setting initial state************************** //
-
 	stringstream st;
 
 	double addordel; // the prob to decide either add or del;
