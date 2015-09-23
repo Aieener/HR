@@ -11,7 +11,7 @@ int main()
 
 	// ======================= Plotting the final config ========================
 	deque<HR> VR,HR;
-	MC m(1E8L,8,90,90,15);
+	MC m(1E8L,8,64,64,16);
 	m.MCRUN();
 	VR = m.getVRodlist();
 	HR = m.getHRodlist();

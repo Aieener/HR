@@ -105,81 +105,29 @@ void MC::Add(Cells &s,double &prob,double &probav, double &probah)
 		{
 			if(prob <= probav)
 			{
+				int counter = 0;
 
-				if(y + length <= r)
+				for (int j = 0; j < length-1; j++)
+				{					
+					// check if the vertical space is wide open
+					if(s.getSquare(x,(y+j+1)%r).isOccupied())
+					{
+						counter++;
+					}					
+				}
+				if(counter == 0)
 				{
-					// the vertical case
-					int counter = 0;
-
-					for (int j = 0; j < length-1; j++)
-					{
-						// check if the vertical space is wide open
-						if(s.getSquare(x,y+j+1).isOccupied())
-						{
-							counter++;
-						}
-						
+					// Do addition;
+					// push the new rod into the Rodlist;
+					VRodlist.push_back(rod);
+					av++;
+					nv++;// accumulate the # of ver rod;
+					// update new N, E and new config;
+					for (int i = 0; i < length; i++)
+					{	
+						s.getSquare(x,(y+i)%r).setStatus(1);
 					}
-					// cout <<"counter = "<< counter<< endl;
-					if (counter == 0)
-					{
-						// Do addition;
-						// push the new rod into the Rodlist;
-						VRodlist.push_back(rod);
-						av++;
-						nv++;// accumulate the # of ver rod;
-						// update new N, E and new config;
-						for (int i = 0; i < length; i++)
-						{	
-							s.getSquare(x,y+i).setStatus(1);
-						}		
-					}						
-				}
-				//========================== Vertical Apply peiodic boundary ===================
-
-				else 
-				{ 
-					// the vertical case apply periodic BC
-					int counter2 = 0;
-					for (int j = 0; j <r-y-1; j++)
-					{
-						// check if the vertical space is wide open
-						if(s.getSquare(x,y+j+1).isOccupied())
-						{
-							counter2++;
-
-						}
-					}
-					if (counter2 == 0)
-					{
-						for (int i = 0; i < y+length-r; i++)
-						{
-							// check if the vertical space is wide open
-							if(s.getSquare(x,i).isOccupied())
-							{								
-								counter2++;
-							}
-						}
-					}
-
-					if (counter2 == 0)
-					{
-						// Do addition;
-						// push the new rod into the Rodlist;
-						VRodlist.push_back(rod);	
-						av++;
-						nv++;// accumulate the # of ver rod;
-						
-						for (int j = 0; j <r-y; j++)
-						{
-							s.getSquare(x,y+j).setStatus(1);
-						}
-						for (int i = 0; i < y+length-r; i++)
-						{
-							s.getSquare(x,i).setStatus(1);
-						}							
-					}
-				}
+				}					
 			}
 		}
 
@@ -188,77 +136,30 @@ void MC::Add(Cells &s,double &prob,double &probav, double &probah)
         //======================= Horizontal inside boundary ============================
 			if(prob <= probah)
 			{
-				if( x + length <= c)
+
+				int counter = 0;
+				for (int j = 0; j< length-1 ; j++)
 				{
-					int counter3 = 0;
-					for (int j = 0; j< length-1 ; j++)
+					// check if the horizontal space is wide open
+					if(s.getSquare((x+1+j)%c,y).isOccupied())
 					{
-						// check if the horizontal space is wide open
-						if(s.getSquare(x+1+j,y).isOccupied())
-						{
-							counter3++;
-						}							
-					}
-					if (counter3 == 0)
-					{
-						//Do addition;
-						//push the new rod into the Rodlist;
-						HRodlist.push_back(rod);
-						ah++;
-						nh++;// accumulate the # of hor rod;
-
-						// update new N, E and new config;
-						for (int i = 0; i < length; i++)
-						{
-							s.getSquare(x+i,y).setStatus(1);
-						}
-					}
+						counter++;
+					}							
 				}
-				//======================= Horizontal periodic boundary ============================
+				if (counter == 0)
+				{
+					//Do addition;
+					//push the new rod into the Rodlist;
+					HRodlist.push_back(rod);
+					ah++;
+					nh++;// accumulate the # of hor rod;
 
-				else
-				{ 		
-					// the Horizontal case apply periodic BC
-					int counter4 = 0;
-					for (int j = 0; j <c-x-1; j++)
+					// update new N, E and new config;
+					for (int i = 0; i < length; i++)
 					{
-						// check if the Horizontal space is wide open
-						if(s.getSquare(x+j+1,y).isOccupied())
-						{
-							counter4++;
-
-						}
+						s.getSquare((x+i)%c,y).setStatus(1);
 					}
-					if (counter4 == 0)
-					{
-						for (int i = 0; i < x + length-c; i++)
-						{
-							// check if the Horizontal space is wide open
-							if(s.getSquare(i,y).isOccupied())
-							{
-								counter4++;
-							}
-						}						
-					}
-
-					if (counter4 == 0)
-					{
-						// Do addition;
-						// push the new rod into the Rodlist;
-						HRodlist.push_back(rod);	
-						ah++;
-						nh++;// accumulate the # of hor rod;
-						
-						for (int j = 0; j <c-x; j++)
-						{
-							s.getSquare(x+j,y).setStatus(1);
-						}
-						for (int i = 0; i < x+length-c; i++)
-						{
-							s.getSquare(i,y).setStatus(1);
-						}							
-					}
-				}				    												
+				}				
 			}
 		}
     }
@@ -284,36 +185,16 @@ void MC::Del(Cells &s,double &prob,double &probdv, double &probdh,double &size)
 
 			if(prob <= probdv)
 			{
-			// --------------------- it's a vertical rod -----------------------
-			// ============== the case rod is inside the Boundary ==============
-				if(y + length <= r)
-				{					
-					for(int i = 0; i<VRodlist[indx].getLength(); i++)
-					{
-						// update the new config of cells
-						s.getSquare(x,y + i).setStatus(0);
-					}
-					// remove the target rod from the deque Rodlist;
-					VRodlist.erase(VRodlist.begin() + indx);
-					nv--;// substract the # of ver rod;
-					dv++;
-				}
-				
-				else
+			// --------------------- it's a vertical rod -----------------------			
+				for(int i = 0; i<VRodlist[indx].getLength(); i++)
 				{
-					// ==============the case apply periodic Boundary============
-					for (int j = 0; j <r-y; j++)
-					{
-						s.getSquare(x,y+j).setStatus(0);
-					}
-					for (int i = 0; i < y+length-r; i++)
-					{
-						s.getSquare(x,i).setStatus(0);
-					}
-					VRodlist.erase(VRodlist.begin() + indx);
-					nv--;// substract the # of ver rod;
-					dv++;
+					// update the new config of cells
+					s.getSquare(x,(y+i)%r).setStatus(0);
 				}
+				// remove the target rod from the deque Rodlist;
+				VRodlist.erase(VRodlist.begin() + indx);
+				nv--;// substract the # of ver rod;
+				dv++;
 			}										
 		}
 	}
@@ -331,38 +212,16 @@ void MC::Del(Cells &s,double &prob,double &probdv, double &probdh,double &size)
 			y = HRodlist[indx].getY();
 			// --------------------- it's a Horizontal rod -----------------------
 			if(prob <= probdh)
-			{
-                // ==============the case rod is inside the Boundary============
-				if(x + length <= c)
-				{					
-					for(int i = 0; i<HRodlist[indx].getLength(); i++)
-					{
-						// update the new config of cells
-						s.getSquare(x+i,y).setStatus(0);
-					}
-					// remove the target rod from the deque Rodlist;
-					HRodlist.erase(HRodlist.begin() + indx);
-					nh--;// substract the # of hor rod;
-					dh++;
-				}
-
-				else
+			{				
+				for(int i = 0; i<HRodlist[indx].getLength(); i++)
 				{
-					// ==============the case apply periodic Boundary============
-					for (int j = 0; j <c-x; j++)
-					{
-						s.getSquare(x+j,y).setStatus(0);
-					}
-					for (int i = 0; i < x+length-c; i++)
-					{
-
-						s.getSquare(i,y).setStatus(0);
-					}
-
-					HRodlist.erase(HRodlist.begin() + indx);
-					nh--;// substract the # of hor rod;
-					dh++;
+					// update the new config of cells
+					s.getSquare((x+i)%c,y).setStatus(0);
 				}
+				// remove the target rod from the deque Rodlist;
+				HRodlist.erase(HRodlist.begin() + indx);
+				nh--;// substract the # of hor rod;
+				dh++;
 			}
 		}
 	}
