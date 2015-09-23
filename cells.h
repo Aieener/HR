@@ -5,8 +5,8 @@
 
 #ifndef CELLS_H
 #define CELLS_H
-#include <deque>
-#include <deque>
+#include <vector>
+#include <vector>
 #include "hardrods.h"
 #include "square.h"
 using namespace std;

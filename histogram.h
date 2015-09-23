@@ -10,7 +10,7 @@
 #include <cstdlib>
 #include <cmath>
 #include <time.h>
-#include <deque>
+#include <vector>
 #include <utility> 
 // #include "python.h"
 using namespace std;

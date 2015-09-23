@@ -10,8 +10,8 @@ int main()
 	double start = clock();
 
 	// ======================= Plotting the final config ========================
-	deque<HR> VR,HR;
-	MC m(1E8L,8,64,64,16);
+	vector<HR> VR,HR;
+	MC m(1E8L,8,64,64,10);
 	m.MCRUN();
 	VR = m.getVRodlist();
 	HR = m.getHRodlist();

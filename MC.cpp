@@ -40,12 +40,12 @@ MC::MC(long int ST, int LEN,int C, int R, double Z)
 	nh=nv=dh=dv=ah=av=0;
 }
 
-deque<HR> MC::getVRodlist() 
+vector<HR> MC::getVRodlist() 
 {
 	return VRodlist;
 }
 
-deque<HR> MC::getHRodlist() 
+vector<HR> MC::getHRodlist() 
 {
 	return HRodlist;
 }
@@ -88,7 +88,7 @@ double MC::getNv() const
 }
 
 
-void MC::Add(Cells &s,double &prob,double &probav, double &probah)
+void MC::Add(Cells &s,double &prob,double &proba)
 {
 	int x,y,o; // pick a random position and orientation for the HR to be added;
 	x = rand()%c;
@@ -99,24 +99,24 @@ void MC::Add(Cells &s,double &prob,double &probav, double &probah)
 	{
 		HR rod(x,y,length,o);
 
-		//======================== Vertical inside boundary===============================
+		//======================== Vertical ===============================
 
 		if(o == 0)
 		{
-			if(prob <= probav)
-			{
-				int counter = 0;
+			int counter = 0;
 
-				for (int j = 0; j < length-1; j++)
-				{					
-					// check if the vertical space is wide open
-					if(s.getSquare(x,(y+j+1)%r).isOccupied())
-					{
-						counter++;
-					}					
-				}
-				if(counter == 0)
+			for (int j = 0; j < length-1; j++)
+			{					
+				// check if the vertical space is wide open
+				if(s.getSquare(x,(y+j+1)%r).isOccupied())
 				{
+					counter++;
+				}					
+			}
+			if(counter == 0)
+			{
+				if(prob <= proba)
+				{					
 					// Do addition;
 					// push the new rod into the Rodlist;
 					VRodlist.push_back(rod);
@@ -127,26 +127,25 @@ void MC::Add(Cells &s,double &prob,double &probav, double &probah)
 					{	
 						s.getSquare(x,(y+i)%r).setStatus(1);
 					}
-				}					
-			}
+				}
+			}								
 		}
 
 		else 
 		{
-        //======================= Horizontal inside boundary ============================
-			if(prob <= probah)
+        //======================= Horizontal  ============================
+			int counter = 0;
+			for (int j = 0; j< length-1 ; j++)
 			{
-
-				int counter = 0;
-				for (int j = 0; j< length-1 ; j++)
+				// check if the horizontal space is wide open
+				if(s.getSquare((x+1+j)%c,y).isOccupied())
 				{
-					// check if the horizontal space is wide open
-					if(s.getSquare((x+1+j)%c,y).isOccupied())
-					{
-						counter++;
-					}							
-				}
-				if (counter == 0)
+					counter++;
+				}							
+			}
+			if (counter == 0)
+			{
+				if(prob <= proba)
 				{
 					//Do addition;
 					//push the new rod into the Rodlist;
@@ -159,72 +158,79 @@ void MC::Add(Cells &s,double &prob,double &probav, double &probah)
 					{
 						s.getSquare((x+i)%c,y).setStatus(1);
 					}
-				}				
-			}
+				}	
+			}							
 		}
     }
 }
 
-void MC::Del(Cells &s,double &prob,double &probdv, double &probdh,double &size)
+void MC::Del(Cells &s,double &prob,double &probd,double &size)
 {
+	// vector<HR> Rodlist;
+	// Rodlist.clear();
+	// Rodlist.insert( Rodlist.end(), VRodlist.begin(), VRodlist.end());//merge vertical first
+	// Rodlist.insert( Rodlist.end(), HRodlist.begin(), HRodlist.end());//then merge hor
 	//Do Del;
-	int DE; //pick a random config of rod to delete with 50% 50% chance for eachl;
-	DE = rand()%2; // change it to 1 for  lattice gas case
-
-	if(DE == 0) // delete Vertical rod; which means delete indx from Rodlist[0,nv-1]
+	if(nv+nh > 0)// make sure there are rod;
 	{
-		if(VRodlist.size()!=0)// make sure there are Vertical rod;
+		int indx; // pick a random index from the Rodlist;
+		indx = rand()%int(nv+nh);
+
+		//remove Rodlist[indx];
+		int x,y;// the position of the target on the cells;
+
+		if(prob <= probd)
 		{
-			int indx; // pick a random index from the Rodlist;
-			indx = rand()%int(nv);
-
-			//remove Rodlist[indx];
-			int x,y;// the position of the target on the cells;
-			x = VRodlist[indx].getX();
-			y = VRodlist[indx].getY();
-
-			if(prob <= probdv)
+			if (indx < nv) // vertical
 			{
-			// --------------------- it's a vertical rod -----------------------			
+				x = VRodlist[indx].getX();
+				y = VRodlist[indx].getY();
+
+				// --------------------- it's a vertical rod -----------------------			
 				for(int i = 0; i<VRodlist[indx].getLength(); i++)
 				{
 					// update the new config of cells
 					s.getSquare(x,(y+i)%r).setStatus(0);
 				}
-				// remove the target rod from the deque Rodlist;
+				// remove the target rod from the vector Rodlist;
 				VRodlist.erase(VRodlist.begin() + indx);
 				nv--;// substract the # of ver rod;
 				dv++;
-			}										
-		}
-	}
+			}
 
-	else
-	{
-		if(HRodlist.size()!=0)// make sure there are Hor rod;
-		{
-			int indx;
-			indx = rand()%int(nh); // redefine indx from Rodlist[nv,nv+nh-1] 
-
-			//remove Rodlist[indx];
-			int x,y;// the position of the target on the cells;
-			x = HRodlist[indx].getX();
-			y = HRodlist[indx].getY();
-			// --------------------- it's a Horizontal rod -----------------------
-			if(prob <= probdh)
-			{				
-				for(int i = 0; i<HRodlist[indx].getLength(); i++)
+			else
+			{
+				x = HRodlist[indx - nv].getX();
+				y = HRodlist[indx - nv].getY();
+				// --------------------- it's a Horizontal rod -----------------------
+				for(int i = 0; i<HRodlist[indx-nv].getLength(); i++)
 				{
 					// update the new config of cells
 					s.getSquare((x+i)%c,y).setStatus(0);
 				}
-				// remove the target rod from the deque Rodlist;
-				HRodlist.erase(HRodlist.begin() + indx);
+				// remove the target rod from the vector Rodlist;
+				HRodlist.erase(HRodlist.begin() + indx - nv);
 				nh--;// substract the # of hor rod;
-				dh++;
+				dh++;				
 			}
-		}
+		}										
 	}
+	// }
+
+	// else
+	// {
+	// 	if(HRodlist.size()!=0)// make sure there are Hor rod;
+	// 	{
+	// 		int indx;
+	// 		indx = rand()%int(nh);  
+
+	// 		//remove Rodlist[indx];
+	// 		int x,y;// the position of the target on the cells;
+	// 		x = HRodlist[indx].getX();
+	// 		y = HRodlist[indx].getY();
+
+	// 	}
+	// }
 }
 
 
@@ -235,11 +241,9 @@ void MC::MCRUN()
 	stringstream st;
 
 	double addordel; // the prob to decide either add or del;
-	double probah,probav; // the acceptance prob of addition; proba = min(1.0,aaccp);
-	double probdh,probdv; // the acceptance prob of deletion; probd = min(1.0,daccp);
+	double probd,proba; // the acceptance prob of addition; proba = min(1.0,aaccp);
 	double prob; // the prob to decide either accept add/del;
-	double aaccph,aaccpv; 
-	double daccph,daccpv;
+	double aaccp,daccp; 
 	double Q; // the fraction of hor and ver particle;
 	double tho; // the density 
 	double AD;// addition and deletion fraction
@@ -260,28 +264,18 @@ void MC::MCRUN()
 		// *****************define the probabilities ***********************************// I HAVE TO CHANGE IT FOR LATTICE GAS CASE!!!
 		prob = ((double) rand() / (RAND_MAX)); 
 		tho = double(length*size)/double(r*c);
-		aaccph = z*(double(r*c)/2.0)/(double(ah-dh+1.0)*double(length));
-		aaccpv = z*(double(r*c)/2.0)/(double(av-dv+1.0)*double(length));
 
-		daccph = (double(ah-dh)*double(length))/(z*(double(r*c)/2.0));
-		daccpv = (double(av-dv)*double(length))/(z*(double(r*c)/2.0));
+		aaccp = z*double(r*c)/(double(nh+nv+1.0)*double(length));
+		daccp = (double(nh+nv)*double(length))/(z*double(r*c));
 
-		probdh = min(1.0,daccph);
-		probdv = min(1.0,daccpv);
-		probah = min(1.0,aaccph);
-		probav = min(1.0,aaccpv);
-
-		//******************* The sturcture of my deque list of HR ***********************
-		// the Vertical rod is always push in the front
-		// the Horizontal rod is always push in the back
-		// the index of last vertical rod in the list can be found by index[nv-1]
-		// *******************************************************************************
+		proba = min(1.0,aaccp);
+		probd = min(1.0,daccp);
 
         // ===========================Addition ===================================
 		if(addordel == 0) 
 		{
 			//Do Addition;
-			Add(s,prob,probav,probah);
+			Add(s,prob,proba);
 		}
 
 		// ============================Deletion=============================
@@ -290,7 +284,7 @@ void MC::MCRUN()
 			if (size != 0) // make sure there are rods to be del;
 			{
 				//Do deletion;
-				Del(s,prob,probdv, probdh,size);
+				Del(s,prob,probd,size);
 			}			
 		}
 
@@ -314,7 +308,7 @@ void MC::MCRUN()
 }
 
 
-void MC::plot(const deque<HR>& VRodlist, const deque<HR>& HRodlist)
+void MC::plot(const vector<HR>& VRodlist, const vector<HR>& HRodlist)
 {
 	stringstream stv,sth;
 

@@ -1,7 +1,7 @@
 /*
 * hardrods.cpp
 * 2-D lattice gas
-* Author: Yuding Ai & Eelco Empting
+* Author: Yuding Ai 
 * Date: 2015.06.08
 */
 
