@@ -32,14 +32,15 @@ dx = np.ones(a)
 dy = np.ones(a)
 
 for y in range(0,a):
-    dy[y] = 8
+    dy[y] = 8 # length
     if a != 0:
         ax.add_patch(
             patches.Rectangle(
                 (xpos[y], ypos[y]),
                 dx[y],
                 dy[y],
-                facecolor="red"
+                facecolor="red",
+                linewidth=0.3
             )
         )
 
@@ -66,18 +67,20 @@ dx = np.ones(a)
 dy = np.ones(a)
 
 for y in range(0,a):
-    dx[y] = 8
+    dx[y] = 8 # length
     if a != 0:
         ax.add_patch(
             patches.Rectangle(
                 (xpos[y], ypos[y]),
                 dx[y],
                 dy[y],
+                facecolor="blue",
+                linewidth=0.3
             )
 
         )
         
 plt.axis('equal')
 plt.grid()
-fig.savefig('2dplot.png', dpi=90, bbox_inches='tight')
+fig.savefig('2dplot.png', dpi=300, bbox_inches='tight')
 # plt.show()

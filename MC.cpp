@@ -215,22 +215,6 @@ void MC::Del(Cells &s,double &prob,double &probd,double &size)
 			}
 		}										
 	}
-	// }
-
-	// else
-	// {
-	// 	if(HRodlist.size()!=0)// make sure there are Hor rod;
-	// 	{
-	// 		int indx;
-	// 		indx = rand()%int(nh);  
-
-	// 		//remove Rodlist[indx];
-	// 		int x,y;// the position of the target on the cells;
-	// 		x = HRodlist[indx].getX();
-	// 		y = HRodlist[indx].getY();
-
-	// 	}
-	// }
 }
 
 

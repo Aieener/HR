@@ -69,6 +69,7 @@ def his():
 	ax5.set_xlabel('Numbers')
 	ax5.set_ylabel('Frequency')
 	ax5.hist(N,numBins,color = 'yellow', alpha = 0.8, label = 'Total Rods')
+	# ax5.set_xlim([0, 450])
 	leg = ax5.legend()
 	leg.get_frame().set_alpha(0.5)
 	title = 'Ntot_#distribution.png'
