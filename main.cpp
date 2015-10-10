@@ -7,6 +7,7 @@ using namespace std;
 
 int main()
 {
+	stringstream t;
 	double start = clock();
 
 	// ======================= Plotting the final config ========================
@@ -26,6 +27,6 @@ int main()
 	string datat = t.str();
 	myfile << datat;
 	myfile.close();	
-	
+
 	return 0;
 }
