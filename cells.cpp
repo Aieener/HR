@@ -1,5 +1,5 @@
 // cells.cpp
-// 2-D lattice gas
+// 2-D Rds
 // Author: Yuding Ai
 // Date: 2015.06.05
 
@@ -77,25 +77,3 @@ Square& Cells::getSquare( int x, int y) const
 	// cout << idx<<endl;
 	return arr[idx];
 }
-
-
-// int main()
-// {
-// 	Cells k;
-// 	Cells w(2,2,2); // we can't take square(2,2,2)!!!
-// 	int size =  w.getSize() ;
-// 	cout <<size<<endl;
-// 	// w.getSquare(1,1,1).setStatus(1);
-// 	int a = w.getSquare(0,0,0).getStatus();
-// 	int b = w.getSquare(1,0,0).getStatus();
-// 	int c = w.getSquare(0,1,0).getStatus();
-// 	int d = w.getSquare(0,0,1).getStatus();
-// 	int e = w.getSquare(1,0,1).getStatus();
-// 	int f = w.getSquare(1,1,0).getStatus();
-// 	int g = w.getSquare(0,1,1).getStatus();
-// 	int h = w.getSquare(1,1,1).getStatus();
-// 	// assert(w.getSquare(1,1,1).isEmpty());
-
-//     cout << a << " " << b << " "<< c << " "<< d<< " "<< e<< " "<< f<< " "<< g<< " "<< h <<endl;
-// 	return 0;
-// }

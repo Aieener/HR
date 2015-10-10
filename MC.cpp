@@ -1,6 +1,6 @@
 /*
-* S2LG.cpp
-* Simulation of 2-D lattice gas By GCMC
+* MC.cpp
+* Simulation of 2-D Rds By GCMC
 * Author: Yuding Ai
 * Date: 2015.06.05
 * *************************** MC implementation ********************************
@@ -9,11 +9,6 @@
 * using both add/del and displacement moves, while NF by particle addition and 
 * deletion moves;
 * ******************************************************************************
-* The Acceptance relation for Displacement is given by: (Page 130 -- Understanding 
-* Molecular Simulations)
-*
-*  -- Pds = min [1, exp{-beta*(E' - E)}]
-*  where E stands for the Energy before displacement and E' stands for after;
 *
 * The Acceptance relation for Addition is given by: (Page 12 --M.S.Shell 2012)
 *  -- Pad = min [1,((r*c/2)/(N + 1)) * exp{-beta*miu}]

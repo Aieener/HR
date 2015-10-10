@@ -1,11 +1,10 @@
 // cells.h	
-// 2-D lattice gas
+// 2-D Rods
 // Author: Yuding Ai
 // Date: 2015.06.05
 
 #ifndef CELLS_H
 #define CELLS_H
-#include <vector>
 #include <vector>
 #include "hardrods.h"
 #include "square.h"

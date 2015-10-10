@@ -141,25 +141,3 @@ void Histogram::plot(int a) const
 	fflush(gnuplot);
 	pclose(gnuplot);
 }
-
-// int main() {
-//     Histogram histogram(0, 10, 1);
-//     double area;
-
-//     ifstream theFile("Datafile.txt");
-//     while (theFile >> area) {
-//         histogram.record(area);
-//     }
-
-//     for (int i = 0; i < histogram.bins(); ++i) {
-//         cout << "In range " << histogram.lowerBound(i)
-//                   << " to " << histogram.upperBound(i)
-//                   << " bin: "<< i << ", total values " << histogram.count(i)
-//                   << endl;
-//     }
-//     histogram.plot(0);
-//     cout << "Mean is "<< histogram.Minave().second <<endl; 
-//     cout << "Min is "<< histogram.Minave().first <<endl; 
-
-//     return 0;
-// }
